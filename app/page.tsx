@@ -1,5 +1,5 @@
+import Weather from "@/components/weather/Weather";
 import Link from "next/link";
-import Checkout from "./cart/CheckoutButton";
 
 const page = () => {
   return (
@@ -15,6 +15,7 @@ const page = () => {
       <Link href="/cart" className="p-2 m-1 border border-b-2 border-white">
         Cart
       </Link>
+      <Weather />
     </div>
   );
 };

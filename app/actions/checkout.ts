@@ -1,4 +1,3 @@
-// app/actions/checkout.ts
 "use server";
 
 import { stripe } from "@/lib/stripe";
