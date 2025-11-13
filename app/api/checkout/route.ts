@@ -3,10 +3,12 @@ import { stripe } from "@/lib/stripe";
 
 export async function POST(req: Request) {
   const { items } = await req.json();
+  console.log(items, "items at checkout");
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
+
     line_items: items.map((item: any) => ({
       price_data: {
         currency: "usd",
@@ -15,6 +17,7 @@ export async function POST(req: Request) {
       },
       quantity: item.quantity,
     })),
+
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success`,
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cancel`,
   });
@@ -22,7 +25,6 @@ export async function POST(req: Request) {
   return NextResponse.json({ url: session.url });
 }
 
-// // app/api/checkout/route.ts
 // import { NextResponse } from "next/server";
 // import { stripe } from "@/lib/stripe";
 

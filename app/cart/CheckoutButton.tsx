@@ -9,6 +9,7 @@ export default function CheckoutButton({ cartItems }: { cartItems: any[] }) {
     });
 
     const { url } = await res.json();
+    console.log(url, "at checkout button");
     window.location.href = url; // Redirect to Stripe Checkout
   };
 
@@ -22,7 +23,6 @@ export default function CheckoutButton({ cartItems }: { cartItems: any[] }) {
   );
 }
 
-// // app/cart/CheckoutButton.tsx
 // "use client";
 
 // import { loadStripe } from "@stripe/stripe-js";
