@@ -95,7 +95,8 @@ export const signup = async (state: any, formData: any) => {
 
     // 5. Send verification email
     const verifyUrl = `${process.env.NEXT_PUBLIC_API_URL}/verify-email/${token}`;
-    await sendVerificationEmail(email, verifyUrl);
+    // await sendVerificationEmail(email, verifyUrl);
+    // ###$$$$ uncomment it ****
 
     // 6. Create Session
     await createSession(user.id);

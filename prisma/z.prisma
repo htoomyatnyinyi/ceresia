@@ -32,7 +32,7 @@
 //   googleId      String?        @unique // Add for Google OAuth
 //   role          Role           @default(USER)
 //   isEmailVerified Boolean      @default(false)
-//   carts         Cart[]
+//   carts         Cart?
 //   orders        Order[]
 //   addresses     Address[]
 //   reviews       Review[]

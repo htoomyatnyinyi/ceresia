@@ -1,0 +1,245 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Use PostgreSQL for a robust, production-ready experience.
+generator client {
+provider = "prisma-client-js"
+}
+
+datasource db {
+provider = "mysql"
+// NOTE: Replace this with your actual database URL in .env
+url      = env("DATABASE_URL")
+}
+
+// =========================================================
+// 1. User & Authentication
+// =========================================================
+
+model User {
+id      String @id @default(cuid())
+email   String @unique
+name    String?
+// Add password hash for full auth or links for providers (e.g., NextAuth)
+
+// Relationships
+cart    Cart?     // One-to-one relationship with the user's current shopping cart
+orders  Order[]   // One-to-many relationship with all placed orders
+
+@@map("users")
+}
+
+// =========================================================
+// 2. Product Catalog
+// =========================================================
+
+model Product {
+id          String    @id @default(cuid())
+name        String
+description String?
+price       Decimal   @db.Decimal(10, 2) // Use Decimal for precise currency representation
+stock       Int
+imageUrl    String?
+
+// Relationships
+cartItems   CartItem[]
+orderItems  OrderItem[]
+
+// @@map("products")
+}
+
+// =========================================================
+// 3. Shopping Cart (Pre-Checkout)
+// =========================================================
+
+model Cart {
+id        String     @id @default(cuid())
+createdAt DateTime   @default(now())
+updatedAt DateTime   @updatedAt
+
+// Relationships
+userId    String     @unique
+user      User       @relation(fields: [userId], references: [id])
+
+items     CartItem[] // Items currently in the cart
+
+// @@map("carts")
+}
+
+model CartItem {
+id          String   @id @default(cuid())
+quantity    Int
+
+// Relationships
+cartId      String
+cart        Cart     @relation(fields: [cartId], references: [id])
+productId   String
+product     Product  @relation(fields: [productId], references: [id])
+
+// @@unique([cartId, productId]) // A user can only have one instance of a product in their cart
+// @@map("cart_items")
+}
+
+// =========================================================
+// 4. Order & Checkout (Post-Checkout)
+// =========================================================
+
+enum OrderStatus {
+PENDING   // Order created, waiting for payment confirmation
+PAID      // Payment successful, processing
+SHIPPED   // Order has been shipped
+DELIVERED // Order has reached the customer
+CANCELLED // Order was cancelled
+}
+
+model Order {
+id             String        @id @default(cuid())
+userId         String
+status         OrderStatus   @default(PENDING)
+totalAmount    Decimal       @db.Decimal(10, 2)
+shippingAddress Json?         // Store address details as a flexible JSON object
+
+createdAt      DateTime      @default(now())
+updatedAt      DateTime      @updatedAt
+
+// Relationships
+user           User          @relation(fields: [userId], references: [id])
+items          OrderItem[]   // Snapshot of products at time of purchase
+
+@@map("orders")
+}
+
+model OrderItem {
+id          String    @id @default(cuid())
+orderId     String
+productId   String?   // Optional if product is deleted, but good for linking
+productName String    // Snapshot of the name at the time of purchase
+price       Decimal   @db.Decimal(10, 2) // The price at the time the order was placed (crucial for history)
+quantity    Int
+
+// Relationships
+order       Order     @relation(fields: [orderId], references: [id])
+// Optional link back to Product, but productName and price are mandatory for historical record
+product     Product?  @relation(fields: [productId], references: [id])
+
+@@map("order_items")
+}
+
+// Add this to your Prisma schema file (schema.prisma)
+// Then run: npx prisma migrate dev --name add_webhook_events
+
+model ProcessedWebhookEvent {
+  id        String   @id // Stripe event ID
+  createdAt DateTime @default(now())
+
+  @@map("processed_webhook_events")
+}
+
+
+// prisma/seed.ts
+// NOTE: You will need 'ts-node' installed to run this script.
+
+import prisma from "@/lib/prisma";
+// Importing Decimal from the client runtime to correctly handle precise number types
+import { Decimal } from "@prisma/client/runtime/library";
+
+// The user ID hardcoded in your app/api/checkout/route.ts
+const MOCK_USER_ID = "clxi8v09c000008l414y5e36k";
+
+async function main() {
+  console.log("--- Start E-commerce Database Seeding ---");
+
+  // 1. Clean up existing data (good practice for a fresh start)
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
+  await prisma.cartItem.deleteMany();
+  await prisma.cart.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.product.deleteMany();
+  console.log("Existing data cleaned.");
+
+  // 2. Create a User (compatible with the checkout route)
+  const user = await prisma.user.create({
+    data: {
+      id: MOCK_USER_ID,
+      email: "testuser@example.com",
+      name: "Test Customer",
+      // password: "password",
+    },
+  });
+  console.log(`✅ Created user with ID: ${user.id}`);
+
+  // 3. Create Products
+  const product1 = await prisma.product.create({
+    data: {
+      name: "Next.js 16 Hoodie",
+      description: "The official comfy hoodie for the latest Next.js version.",
+      price: new Decimal(49.99),
+      stock: 15,
+      imageUrl: "https://placehold.co/400x400/000000/FFFFFF?text=NextJS+Hoodie",
+    },
+  });
+
+  const product2 = await prisma.product.create({
+    data: {
+      name: "Prisma Data Guide",
+      description:
+        "A comprehensive guide to modern database tooling with Prisma.",
+      price: new Decimal(24.5),
+      stock: 50,
+      imageUrl: "https://placehold.co/400x400/4096B0/FFFFFF?text=Prisma+Guide",
+    },
+  });
+
+  const product3 = await prisma.product.create({
+    data: {
+      name: "Stripe API Key Chain",
+      description: "A limited edition keychain shaped like a Stripe API key.",
+      price: new Decimal(12.0),
+      stock: 5,
+      imageUrl: "https://placehold.co/400x400/635BFF/FFFFFF?text=Stripe+Key",
+    },
+  });
+  console.log(`✅ Created 3 mock products.`);
+
+  // 4. Create a Cart for the user
+  const cart = await prisma.cart.create({
+    data: {
+      userId: user.id,
+    },
+  });
+  console.log(`✅ Created shopping cart with ID: ${cart.id}`);
+
+  // 5. Create Cart Items (for the mock user's current shopping cart)
+  await prisma.cartItem.createMany({
+    data: [
+      {
+        cartId: cart.id,
+        productId: product1.id,
+        quantity: 1, // 1 Hoodie
+        // price: 100,
+      },
+      {
+        cartId: cart.id,
+        productId: product2.id,
+        quantity: 2, // 2 Guides
+        // price: 120,
+      },
+    ],
+  });
+
+  // Total in cart: (1 * $49.99) + (2 * $24.50) = $49.99 + $49.00 = $98.99
+  console.log(`✅ Added products to the cart. Total value: $98.99.`);
+
+  console.log("--- Seeding finished successfully! ---");
+}
+
+// Execute the main function
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
