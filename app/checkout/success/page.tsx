@@ -1,13 +1,15 @@
-const page = () => {
+import Link from "next/link";
+
+export default function SuccessPage() {
   return (
-    <div>
-      <h1 className="text-8xl text-center">Success</h1>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto
-      pariatur, impedit voluptatibus ullam a ipsum vel corporis veniam molestias
-      culpa, reiciendis porro exercitationem nihil aut! Possimus, hic laborum.
-      Reprehenderit, voluptates!
+    <div className="text-center py-20">
+      <h1 className="text-2xl font-bold text-green-600">
+        ✅ Payment Successful!
+      </h1>
+      <p>Thank you for testing Stripe Checkout.</p>
+      <Link href="/products" className="p-2 m-1 underline underline-offset-2 ">
+        Continue Shopping
+      </Link>
     </div>
   );
-};
-
-export default page;
+}
