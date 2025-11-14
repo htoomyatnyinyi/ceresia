@@ -1,3 +1,4 @@
+import CheckoutForm from "../checkout/CheckoutForm";
 import CheckoutButton from "./CheckoutButton";
 
 export default function CartPage() {
@@ -44,6 +45,7 @@ export default function CartPage() {
       </div>
 
       <CheckoutButton cartItems={cartItems} />
+      <CheckoutForm />
     </div>
   );
 }
