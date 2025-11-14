@@ -10,6 +10,7 @@
 !.yarn/releases
 !.yarn/versions
 
+/prisma/migrations
 # testing
 /coverage
 # next.js
