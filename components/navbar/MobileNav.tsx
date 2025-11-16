@@ -20,6 +20,8 @@ const MobileNav = () => {
     { name: "signin", path: "/signin" },
     { name: "signup", path: "/signup" },
     { name: "cart", path: "/cart" },
+    { name: "acount", path: "/account" },
+    { name: "order", path: "/account/order" },
   ];
   return (
     <div className="flex justify-center items-center gap-4">

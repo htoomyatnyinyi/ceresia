@@ -26,7 +26,7 @@ async function main() {
       id: MOCK_USER_ID,
       email: "testuser@example.com",
       name: "Test Customer",
-      // password: "password",
+      password: "password",
     },
   });
   console.log(`✅ Created user with ID: ${user.id}`);

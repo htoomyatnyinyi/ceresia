@@ -4,9 +4,8 @@ import { SignJWT, jwtVerify } from "jose"; // Using 'jose' is modern and recomme
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import prisma from "./prisma";
-import { success } from "zod";
 
-const secretKey = process.env.JWT_SECRET || "htoomyat";
+const secretKey = process.env.JWT_SECRET || "htoomyatnyinyi";
 const key = new TextEncoder().encode(secretKey);
 
 // // setup cookies

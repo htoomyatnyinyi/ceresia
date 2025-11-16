@@ -8,12 +8,13 @@ const SignOutSchema = z.object({
 });
 
 export const signout = async (state: any, formData: FormData) => {
-  //   console.log(formData, "formData");
-  const validatedData = SignOutSchema.parse({
-    userId: formData.get("userId"),
-  });
+  console.log(state, "state");
+  // //   console.log(formData, "formData");
+  // const validatedData = SignOutSchema.parse({
+  //   userId: formData.get("userId"),
+  // });
 
-  console.log(validatedData, "validated");
+  // console.log(validatedData, "validated");
   try {
     await deleteSession();
 

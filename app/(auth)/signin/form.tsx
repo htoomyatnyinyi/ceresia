@@ -1,10 +1,24 @@
 "use client";
-import { useActionState } from "react";
-import { signin } from "./actions";
+
+import { useActionState, useEffect } from "react";
 import Link from "next/link";
+import { signin } from "./actions";
+import { toast } from "sonner";
 
 const SignInForm = () => {
   const [state, action, pending] = useActionState(signin, { errors: {} });
+
+  // 👇 The correct way to display a toast
+  useEffect(() => {
+    // Check if the state has a success message to display
+    if (state?.message) {
+      toast.success(state.message);
+    }
+    // You could also add error toasts here:
+    // if (state?.errors?.general) {
+    //   toast.error(state.errors.general);
+    // }
+  }, [state]); // 👈 Re-run this effect every time 'state' changes
 
   return (
     <div>
@@ -14,6 +28,7 @@ const SignInForm = () => {
           name="email"
           placeholder="email"
           className="p-2 m-1 border-2 "
+          defaultValue="abc@mail.com"
         />
         {state?.errors?.email && <p>{state.errors.email}</p>}
         <input
@@ -21,6 +36,7 @@ const SignInForm = () => {
           name="password"
           placeholder="password"
           className="p-2 m-1 border-2 "
+          defaultValue="abcd"
         />
         {state?.errors?.password && <p>{state.errors.password}</p>}
 

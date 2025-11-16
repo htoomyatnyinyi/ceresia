@@ -2,10 +2,29 @@
 
 import Link from "next/link";
 import { signup } from "./actions";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 
 const SignUpForm = () => {
   const [state, action, pending] = useActionState(signup, { errors: {} });
+  console.log(state);
+
+  useEffect(() => {
+    if (state?.message) {
+      toast.success(state.message, {
+        description: state.description,
+      });
+    }
+    if (state?.errors?.email) {
+      toast.error(state.errors.email);
+    }
+    if (state?.errors?.username) {
+      toast.error(state.errors.username);
+    }
+    if (state?.errors?.email) {
+      toast.error(state.errors.email);
+    }
+  }, [state]);
 
   return (
     <div>
@@ -15,14 +34,16 @@ const SignUpForm = () => {
           name="username"
           placeholder="usernmae"
           className="text-sky-400 border-2 p-2 m-1"
+          defaultValue="abc"
         />
-        {state?.errors?.username && <p>{state.errors.username}</p>}
+        {/* {state?.errors?.username && <p>{state.errors.username}</p>} */}
 
         <input
           type="email"
           name="email"
           placeholder="email"
           className="text-sky-400 border-2 p-2 m-1"
+          defaultValue="abc@mail.com"
         />
         {state?.errors?.email && <p>{state.errors.email}</p>}
 
@@ -31,6 +52,7 @@ const SignUpForm = () => {
           name="password"
           placeholder="password"
           className="text-sky-400 border-2 p-2 m-1"
+          defaultValue="abcd"
         />
         {/* {state?.errors?.password && <p>{state.errors.password}</p>} */}
         {state?.errors &&
@@ -42,6 +64,7 @@ const SignUpForm = () => {
           name="confirmPassword"
           placeholder="confirm password"
           className="text-sky-400 border-2 p-2 m-1"
+          defaultValue="abcd"
         />
         {state?.errors &&
           "confirmPassword" in state.errors &&
@@ -65,58 +88,3 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
-
-// "use client";
-// import { useActionState } from "react";
-// import { signup } from "./actions";
-
-// const SignUpForm = () => {
-//   const [state, action, pending] = useActionState<any>(signup, {
-//     error: {},
-//   });
-
-//   console.log(state?.error, " state at signup", state?.success);
-
-//   return (
-//     <div>
-//       <form action={action} className="flex flex-col ">
-//         <input
-//           type="text"
-//           name="username"
-//           placeholder="username"
-//           className="p-2 m-1 "
-//         />
-//         {state?.errors?.username && <p>{state.errors.username}</p>}
-//         <input
-//           type="email"
-//           name="email"
-//           placeholder="email"
-//           className="p-2 m-1 "
-//         />
-//         {state?.errors?.email && <p>{state.errors.email}</p>}
-
-//         <input
-//           type="password"
-//           name="password"
-//           placeholder="password"
-//           className="p-2 m-1 "
-//         />
-//         <input
-//           type="password"
-//           name="confirmPassword"
-//           placeholder="confirPassword"
-//           className="p-2 m-1 "
-//         />
-//         <button
-//           type="submit"
-//           className="p-2 m-1 bg-green-500"
-//           disabled={pending}
-//         >
-//           {pending ? "Signing Up" : "Sign Up"}
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default SignUpForm;

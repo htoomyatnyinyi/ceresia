@@ -38,7 +38,7 @@ export const signin = async (state: any, formData: any) => {
   }
 
   // 3. Verify password
-  const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
+  const isPasswordValid = await bcrypt.compare(password, user.password!);
 
   if (!isPasswordValid) {
     return {

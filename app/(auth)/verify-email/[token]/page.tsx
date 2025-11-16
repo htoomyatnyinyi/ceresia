@@ -1,48 +1,31 @@
-"use client";
+import { verifyEmail } from "./actions"; // Import your server action
+// import VerifyEmailClient from "./VerifyEmailClient";
+import VerifyEmailClient from "@/components/general/VerifyEmailClient";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { verifyEmail } from "./actions";
+// This is an Async Server Component (SC)
+const VerifyEmailPage = async ({ params }: { params: { token: string } }) => {
+  // const { token } = params;
 
-export default function VerifyEmailPage({
-  params,
-}: {
-  params: { token: string };
-}) {
-  const router = useRouter();
-  const [status, setStatus] = useState<"loading" | "success" | "error">(
-    "loading"
-  );
-  const [message, setMessage] = useState("");
+  const awaitToken = await params;
+  const token = awaitToken.token;
 
-  useEffect(() => {
-    async function verify() {
-      try {
-        const result = await verifyEmail(params.token);
-        if (result.success) {
-          setStatus("success");
-          setMessage(
-            "Email verified successfully! Redirecting to dashboard..."
-          );
-          setTimeout(() => router.push("/dashboard"), 2000);
-        } else {
-          setStatus("error");
-          setMessage(result.error || "Failed to verify email.");
-        }
-      } catch (error) {
-        setStatus("error");
-        setMessage("An unexpected error occurred.");
-      }
-    }
-    verify();
-  }, [params.token, router]);
+  if (!token) {
+    // Handle case where token is missing early
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h1 className="text-3xl font-bold mb-4">Verification Error</h1>
+        <p className="text-red-500 font-medium">
+          Verification token is missing.
+        </p>
+      </div>
+    );
+  }
 
-  return (
-    <div className="">
-      <h1>Verify Email</h1>
-      {status === "loading" && <p>Verifying your email...</p>}
-      {status === "success" && <p style={{ color: "green" }}>{message}</p>}
-      {status === "error" && <p style={{ color: "red" }}>{message}</p>}
-    </div>
-  );
-}
+  // 1. Perform the verification directly on the server
+  const result = await verifyEmail(token);
+
+  // 2. Pass the result to the Client Component for display/redirection
+  return <VerifyEmailClient result={result} />;
+};
+
+export default VerifyEmailPage;

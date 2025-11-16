@@ -7,12 +7,17 @@ import crypto from "crypto";
 
 export async function verifyEmail(token: string) {
   // 1. Find and validate token
-  const verificationToken = await prisma.verificationToken.findUnique({
-    where: { token },
-    include: { user: true },
-  });
+  const emailVerificationToken = await prisma.emailVerificationToken.findUnique(
+    {
+      where: { token },
+      include: { user: true },
+    }
+  );
 
-  if (!verificationToken || verificationToken.expiresAt < new Date()) {
+  if (
+    !emailVerificationToken ||
+    emailVerificationToken.expiresAt < new Date()
+  ) {
     return {
       error: "Invalid or expired verification token",
     };
@@ -21,13 +26,13 @@ export async function verifyEmail(token: string) {
   // 2. Update user's verified status
   try {
     await prisma.user.update({
-      where: { id: verificationToken.userId },
+      where: { id: emailVerificationToken.userId },
       data: { verified: true },
     });
 
     // 3. Delete used token
-    await prisma.verificationToken.delete({
-      where: { id: verificationToken.id },
+    await prisma.emailVerificationToken.delete({
+      where: { id: emailVerificationToken.id },
     });
 
     return { success: true };
@@ -57,7 +62,7 @@ export async function resendVerificationEmail(_: any, formData: FormData) {
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    await prisma.verificationToken.create({
+    await prisma.emailVerificationToken.create({
       data: {
         userId: user.id,
         token,
@@ -65,7 +70,7 @@ export async function resendVerificationEmail(_: any, formData: FormData) {
       },
     });
 
-    const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verifyemail/${token}`;
+    const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email/${token}`;
     await sendVerificationEmail(email, verifyUrl);
     return { success: true };
   } catch (error) {
@@ -77,41 +82,3 @@ export async function resendVerificationEmail(_: any, formData: FormData) {
     };
   }
 }
-// "use server";
-
-// import prisma from "@/lib/prisma";
-// import { redirect } from "next/navigation";
-
-// export async function verifyEmail(token: string) {
-//   // 1. Find and validate token
-//   const verificationToken = await prisma.verificationToken.findUnique({
-//     where: { token },
-//     include: { user: true },
-//   });
-
-//   if (!verificationToken || verificationToken.expiresAt < new Date()) {
-//     return {
-//       error: "Invalid or expired verification token",
-//     };
-//   }
-
-//   // 2. Update user's verified status
-//   try {
-//     await prisma.user.update({
-//       where: { id: verificationToken.userId },
-//       data: { verified: true },
-//     });
-
-//     // 3. Delete used token
-//     await prisma.verificationToken.delete({
-//       where: { id: verificationToken.id },
-//     });
-
-//     return { success: true };
-//   } catch (error) {
-//     console.error("Error verifying email:", error);
-//     return {
-//       error: "Failed to verify email. Please try again.",
-//     };
-//   }
-// }

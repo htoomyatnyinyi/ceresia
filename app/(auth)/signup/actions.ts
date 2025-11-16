@@ -2,7 +2,7 @@
 
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
-import { z } from "zod";
+import { success, z } from "zod";
 import { sendVerificationEmail } from "@/lib/email";
 import { createSession } from "@/lib/session";
 
@@ -26,10 +26,6 @@ const SignUpFormSchema = z
 // };
 
 export const signup = async (state: any, formData: any) => {
-  //   const username = formData.get("username");
-  //   console.log(username, " action");
-  //   console.log(state, formData, " check at action signpu");
-
   // 1. validate
   const validateResult = SignUpFormSchema.safeParse({
     username: formData.get("username"),
@@ -41,6 +37,7 @@ export const signup = async (state: any, formData: any) => {
   if (!validateResult.success) {
     return {
       errors: validateResult.error.flatten().fieldErrors,
+      // errors: validateResult.error.flatten().fieldErrors,
     };
   }
 
@@ -50,6 +47,7 @@ export const signup = async (state: any, formData: any) => {
   const existingUserByEmail = await prisma.user.findUnique({
     where: { email },
   });
+
   if (existingUserByEmail) {
     return {
       errors: { email: "Email already in use" },
@@ -62,7 +60,7 @@ export const signup = async (state: any, formData: any) => {
 
   if (existingUserByUserName) {
     return {
-      errors: { name: "Username already in use" },
+      errors: { username: "Username already in use" },
     };
   }
 
@@ -73,19 +71,18 @@ export const signup = async (state: any, formData: any) => {
       data: {
         username,
         email,
-        hashedPassword,
+        password: hashedPassword,
         verified: false,
       },
     });
-    console.log(user, " inserted");
 
     // 4(a). Generate verification token
     const token = crypto.randomUUID();
-    console.log(token, "generate from uuid");
+
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
 
     // 4(b). Store verifyToken at database for email verifcation
-    await prisma.verificationToken.create({
+    await prisma.emailVerificationToken.create({
       data: {
         userId: user.id,
         token,
@@ -95,13 +92,30 @@ export const signup = async (state: any, formData: any) => {
 
     // 5. Send verification email
     const verifyUrl = `${process.env.NEXT_PUBLIC_API_URL}/verify-email/${token}`;
-    // await sendVerificationEmail(email, verifyUrl);
+    await sendVerificationEmail(email, verifyUrl);
     // ###$$$$ uncomment it ****
-
+    // // toast noti
+    // {
+    //       description: "Sunday, December 03, 2023 at 9:00 AM",
+    //       action: {
+    //         label: "Undo",
+    //         onClick: () => console.log("Undo"),
+    //       },
+    //     }
     // 6. Create Session
     await createSession(user.id);
-    return { success: true };
+    return {
+      success: true,
+      message: "Signup Successfully!",
+      account: {
+        time: user?.createdAt,
+        status: user?.verified,
+      },
+      description: "Please blah..blah..!",
+    };
   } catch (error) {
-    console.error(error);
+    return {
+      errors: { general: "Something went wrong. Please try again." },
+    };
   }
 };

@@ -1,7 +1,9 @@
+import { SonnerTypes } from "@/components/general/SonnerTypes";
+import Weather from "@/components/weather/Weather";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 
-const page = async () => {
+const ProductPage = async () => {
   const products = await prisma.product.findMany();
 
   return (
@@ -21,8 +23,12 @@ const page = async () => {
         ))}
       </div>
       <br />
+      <div>
+        <SonnerTypes />
+        <Weather />
+      </div>
     </div>
   );
 };
 
-export default page;
+export default ProductPage;
