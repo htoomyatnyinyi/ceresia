@@ -1,0 +1,21 @@
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
+import AdminSidebar from "@/components/theme/AdminSidebar";
+
+const Layout = async ({ children }: { children: React.ReactNode }) => {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
+  return (
+    <SidebarProvider defaultOpen={defaultOpen}>
+      <AdminSidebar />
+
+      <main>
+        <SidebarTrigger />
+        {children}
+      </main>
+    </SidebarProvider>
+  );
+};
+
+export default Layout;

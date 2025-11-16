@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { stripe } from "@/lib/stripe";
 import z from "zod";
+import { verifySession } from "@/lib/session";
 
 const checkoutSchema = z.object({
   // Assuming simple shipping address fields; adjust as needed for your form
@@ -19,7 +20,9 @@ export const checkout = async (
   state: any,
   formData: FormData
 ): Promise<any> => {
-  const userId = "clxi8v09c000008l414y5e36k"; // Hardcoded for demo; replace with auth logic
+  const session = await verifySession();
+
+  // const userId = "clxi8v09c000008l414y5e36k"; // Hardcoded for demo; replace with auth logic
 
   // 1. Prepare and Validate Data
   const rawData = {
@@ -39,15 +42,29 @@ export const checkout = async (
       errors: validatedData.error.flatten().fieldErrors,
     };
   }
-
+  // ##############
+  // #
+  // #
+  // #
+  // #
+  // ##############
+  // CHECK HERE TO INSERTED DATA INTO DATA BASE
   const shippingAddress = validatedData.data;
+
+  // Check if user is authenticated
+  if (!session?.userId) {
+    return {
+      success: false,
+      message: "User is not authenticated.",
+    };
+  }
 
   try {
     // Use a transaction for atomicity (create order, order items, update stock, clear cart, create PaymentIntent)
     const { order, paymentIntent } = await prisma.$transaction(async (tx) => {
       // Find the user's cart
       const cart = await tx.cart.findUnique({
-        where: { userId: userId },
+        where: { userId: session.userId },
         include: {
           items: {
             include: { product: true },
@@ -73,10 +90,11 @@ export const checkout = async (
       // 1. Create the Order
       const order = await tx.order.create({
         data: {
-          userId: userId,
+          userId: session.userId,
           status: "PENDING",
           totalAmount: totalAmount,
-          shippingAddress: shippingAddress,
+          // LATER MODIFY WITH THE SHIPPINGADDRESS MODEL
+          // shippingAddress: shippingAddress,
         },
       });
 
@@ -105,9 +123,10 @@ export const checkout = async (
 
       // 4. Create PaymentIntent
       const metadata = {
-        userId,
+        userId: session.userId,
+        // userId,
         orderId: order.id, // Link the PaymentIntent to the Order
-        shippingAddress: JSON.stringify(shippingAddress),
+        // shippingAddress: JSON.stringify(shippingAddress),
         // ... other cart snapshot data
       };
 

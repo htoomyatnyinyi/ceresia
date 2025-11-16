@@ -1,9 +1,13 @@
 import prisma from "@/lib/prisma";
+import { verifySession } from "@/lib/session";
 import Link from "next/link";
 
 const CartPage = async () => {
+  const session = await verifySession();
+
   const cartItems = await prisma.cartItem.findMany({
-    where: { cart: { userId: "clxi8v09c000008l414y5e36k" } }, // Hardcoded userId for demo
+    where: { cart: { userId: session?.userId } }, // Hardcoded userId for demo
+    // where: { cart: { userId: "clxi8v09c000008l414y5e36k" } }, // Hardcoded userId for demo
 
     include: {
       product: true,

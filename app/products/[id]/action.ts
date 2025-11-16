@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { verifySession } from "@/lib/session";
 import z from "zod";
 
 const addtocartSchema = z.object({
@@ -11,7 +12,8 @@ const addtocartSchema = z.object({
 
 // The Server Action
 export const addtocart = async (state: any, formData: FormData) => {
-  const userId = "clxi8v09c000008l414y5e36k";
+  const session = await verifySession();
+  // const userId = "clxi8v09c000008l414y5e36k";
 
   // 1. Prepare data for Zod parsing
   const rawData = {
@@ -35,6 +37,14 @@ export const addtocart = async (state: any, formData: FormData) => {
   // 4. If validation passes, proceed with business logic
   const { productId, price, quantity } = validatedData.data;
 
+  // Check if user is authenticated
+  if (!session?.userId) {
+    return {
+      success: false,
+      message: "User is not authenticated.",
+    };
+  }
+
   // --- Start Business Logic ---
   console.log(
     `Adding ${quantity} of product ${productId} at $${price} to cart.`
@@ -43,14 +53,14 @@ export const addtocart = async (state: any, formData: FormData) => {
   try {
     // 1. Find or create the user's cart
     let cart = await prisma.cart.findUnique({
-      where: { userId: userId },
+      where: { userId: session.userId },
     });
 
     if (!cart) {
       cart = await prisma.cart.create({
-        data: { userId: userId },
+        data: { userId: session.userId },
       });
-      console.log(`Created new cart for user ${userId}.`);
+      console.log(`Created new cart for user ${session?.userId}.`);
     }
 
     // 2. Check if the product is already in the cart.

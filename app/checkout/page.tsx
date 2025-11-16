@@ -1,4 +1,3 @@
-// app/checkout/page.tsx
 "use client";
 
 import { Elements } from "@stripe/react-stripe-js";
