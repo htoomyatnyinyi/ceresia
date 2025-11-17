@@ -4,7 +4,6 @@ import SignOutForm from "../(auth)/signout/form";
 
 const Account = async () => {
   const session = await verifySession();
-  console.log(session);
 
   return (
     <div>

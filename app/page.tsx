@@ -1,8 +1,16 @@
+import Link from "next/link";
+
 const page = () => {
-  return <div>page</div>;
+  return (
+    <div>
+      <p>Enter</p>
+      <Link href="/admin">Admin Page</Link>
+    </div>
+  );
 };
 
 export default page;
+
 // import prisma from "@/lib/prisma";
 
 // const Admin = () => {

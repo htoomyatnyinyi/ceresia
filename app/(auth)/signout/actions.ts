@@ -8,6 +8,7 @@ const SignOutSchema = z.object({
 });
 
 export const signout = async (state: any, formData: FormData) => {
+  // should we use verifySession here of as props i do not know.
   console.log(state, "state");
   // //   console.log(formData, "formData");
   // const validatedData = SignOutSchema.parse({

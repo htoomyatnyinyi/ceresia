@@ -18,6 +18,8 @@ email       String      @unique
 googleId    String?     @unique // for google 0auth
 password    String?
 
+role        Role        @default(USER)
+
 firstName   String?
 lastName    String?
 phoneNumber String?
@@ -45,6 +47,11 @@ emailVerificationTokens EmailVerificationToken[] // Add relation for email verif
 passwordResetTokens PasswordResetToken[] // Add relation for password reset
 
 @@map("users")
+}
+enum Role {
+  USER
+  EDITOR
+  ADMIN
 }
 
 model PasswordResetToken {
@@ -77,9 +84,14 @@ price       Decimal   @db.Decimal(10, 2) // Use Decimal for precise currency rep
 stock       Int
 imageUrl    String?
 
+createdAt   DateTime    @default(now())
+updatedAt   DateTime    @updatedAt
+
 // Relationships
 cartItems   CartItem[]
 orderItems  OrderItem[]
+
+
 
 // @@map("products")
 }
@@ -90,6 +102,7 @@ orderItems  OrderItem[]
 
 model Cart {
 id        String     @id @default(cuid())
+
 createdAt DateTime   @default(now())
 updatedAt DateTime   @updatedAt
 
@@ -99,12 +112,17 @@ user      User       @relation(fields: [userId], references: [id])
 
 items     CartItem[] // Items currently in the cart
 
+
 // @@map("carts")
 }
 
 model CartItem {
 id          String   @id @default(cuid())
 quantity    Int
+
+createdAt   DateTime    @default(now())
+updatedAt   DateTime    @updatedAt
+
 
 // Relationships
 cartId      String
@@ -169,6 +187,10 @@ id          String    @id @default(cuid())
 productName String    // Snapshot of the name at the time of purchase
 price       Decimal   @db.Decimal(10, 2) // The price at the time the order was placed (crucial for history)
 quantity    Int
+
+createdAt   DateTime    @default(now())
+updatedAt   DateTime    @updatedAt
+
 
 // Relationships
 orderId     String

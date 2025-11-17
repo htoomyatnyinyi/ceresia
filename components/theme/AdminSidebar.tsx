@@ -15,18 +15,28 @@ import {
 const items = [
   {
     title: "Products",
-    url: "/admin/product",
+    url: "/admin/products",
     icon: Inbox,
   },
   {
     title: "Create New Products",
-    url: "/admin/product/new",
+    url: "/admin/products/new",
     icon: Calendar,
   },
   {
-    title: "Create New Products",
-    url: "/admin/product/edit",
+    title: "Edit Products",
+    url: "/admin/products/edit",
     icon: Calendar,
+  },
+  {
+    title: "Orders",
+    url: "/admin/orders",
+    icon: Settings,
+  },
+  {
+    title: "Update Order Status",
+    url: "/admin/orders/update",
+    icon: Settings,
   },
   {
     title: "Search",
