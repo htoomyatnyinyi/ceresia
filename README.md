@@ -1,3 +1,3 @@
-"Coffee Diary, an e-commerce web application, is developed by Htoo Myat Nyinyi using Next.js 14, Bun, Server Actions, and Prisma ORM."
+"Coffee Diary, an e-commerce web application, is developed by Htoo Myat Nyi Nyi using Next.js 16, Bun, Server Actions, and Prisma ORM."
 
 - 'backup point: admin dashboard logic finished'
