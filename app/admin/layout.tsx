@@ -1,6 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import AdminSidebar from "@/components/theme/AdminSidebar";
+// import AdminSidebar from "@/components/theme/AdminSidebar";
+import AdminSidebar from "./AdminSidebar";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies();

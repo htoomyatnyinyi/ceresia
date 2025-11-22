@@ -40,7 +40,7 @@ export default async function OrderDetailPage({
             <div>
               Current Status:
               <span className="font-bold text-lg">{order.status}</span>
-              <StatusForm orderId={order.id} />
+              <StatusForm orderId={order.id} currentStatus={order.status} />
             </div>
             <p>Order Date: {order.createdAt.toLocaleDateString()}</p>
             <p>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function SuccessPage() {
+const SuccessPage = () => {
   return (
     <div className="text-center py-20">
       <h1 className="text-2xl font-bold text-green-600">
@@ -12,4 +12,5 @@ export default function SuccessPage() {
       </Link>
     </div>
   );
-}
+};
+export default SuccessPage;
