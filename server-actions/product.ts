@@ -1,4 +1,3 @@
-// server-actions/product.ts
 "use server";
 
 import prisma from "@/lib/prisma";
@@ -150,6 +149,7 @@ export async function deleteProduct(productId: string) {
     };
   }
 }
+
 // // server-actions/product.ts
 // "use server";
 

@@ -3,13 +3,53 @@ import Link from "next/link";
 const page = () => {
   return (
     <div>
-      <p>Enter</p>
-      <Link href="/admin">Admin Page</Link>
+      <Hero />
     </div>
   );
 };
 
 export default page;
+
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import Weather from "@/components/weather/Weather";
+
+function Hero() {
+  return (
+    <div className="   ">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24  ">
+        <div className="grid md:grid-cols-2 gap-12 items-center  ">
+          <div>
+            <h2 className=" mb-4">Summer Collection 2025</h2>
+            <p className="text-neutral-300 mb-8 text-lg">
+              Discover our latest arrivals and exclusive deals. Quality products
+              at unbeatable prices.
+            </p>
+            <Button size="lg" variant="default">
+              {/* Shop Now */}
+              <Link href="/admin">Admin Page</Link>
+            </Button>
+          </div>
+          <div className="relative h-96 rounded-lg overflow-hidden">
+            {/* <ImageWithFallback
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop"
+              alt="Shopping collection"
+              className="w-full h-full object-cover"
+            /> */}
+            <Image
+              src="/coffee.png"
+              alt="Shopping collection"
+              // className="w-full h-full object-cover"
+              className="w-full h-full dark:invert"
+              fill
+            />
+          </div>
+        </div>
+      </div>
+      <Weather />
+    </div>
+  );
+}
 
 // import prisma from "@/lib/prisma";
 

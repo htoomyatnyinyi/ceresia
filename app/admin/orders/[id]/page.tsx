@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 // import { OrderStatus } from "@prisma/client";
 import { verifySession } from "@/lib/session";
+import StatusForm from "./StatusForm";
 
 export default async function OrderDetailPage({
   params,
@@ -36,10 +37,11 @@ export default async function OrderDetailPage({
         <div className="md:col-span-2 space-y-4">
           <div className="border p-4 rounded shadow">
             <h2 className="text-xl font-semibold mb-2">Summary</h2>
-            <p>
+            <div>
               Current Status:
               <span className="font-bold text-lg">{order.status}</span>
-            </p>
+              <StatusForm orderId={order.id} />
+            </div>
             <p>Order Date: {order.createdAt.toLocaleDateString()}</p>
             <p>
               Total Amount:
