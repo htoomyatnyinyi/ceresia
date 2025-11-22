@@ -1,43 +1,18 @@
+// app/admin/products/new/page.tsx
 import { verifySession } from "@/lib/session";
+// import ProductForm from "../ProductForm";
+import ProductForm from "./ProductForm";
 
-import CreateNewPorduct from "./CreateNewPorduct";
-import prisma from "@/lib/prisma";
-
-const page = async () => {
+export default async function NewProductPage() {
   const session = await verifySession();
-  if (!session) {
-    return null;
+  if (!session.success || session.role !== "ADMIN") {
+    return <h1>Access Denied: Admin privileges required.</h1>;
   }
 
-  const [users, products, orders] = await Promise.all([
-    prisma.user.findMany(),
-    prisma.product.findMany(),
-    prisma.order.findMany(),
-  ]);
-
+  // When creating, we pass no initialProduct data
   return (
-    <div>
-      <CreateNewPorduct />
-
-      <div>
-        <div className="p-2 m-1 border-b-4 text-pink-500 ">
-          {users?.map((user) => (
-            <div>{user.username}</div>
-          ))}
-        </div>
-        <div className="p-2 m-1 border-b-4 text-green-500 ">
-          {products?.map((product) => (
-            <div>{product.name}</div>
-          ))}
-        </div>
-        <div className="p-2 m-1 border-b-4  text-yellow-800">
-          {orders?.map((order) => (
-            <div>{order.status}</div>
-          ))}
-        </div>
-      </div>
+    <div className="p-8">
+      <ProductForm />
     </div>
   );
-};
-
-export default page;
+} //
