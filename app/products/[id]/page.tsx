@@ -37,13 +37,13 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-lg">
-            {/* <Image
+            <Image
               src={product.imageUrl || "/coffee.png"} // Use product image or fallback
               alt={product.name}
               fill
-              className="object-cover dark:invert"
+              className="object-cover "
               priority // For better LCP on product pages
-            /> */}
+            />
           </div>
           <div className="space-y-6">
             <h1 className="text-4xl font-bold">{product.name}</h1>
@@ -71,12 +71,12 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
                   className="block rounded-lg border bg-card p-4 hover:shadow-md transition-shadow"
                 >
                   <div className="relative w-full h-40 mb-2 overflow-hidden rounded">
-                    {/* <Image
+                    <Image
                       src={prod.imageUrl || "/coffee.png"}
                       alt={prod.name}
                       fill
                       className="object-cover"
-                    /> */}
+                    />
                   </div>
                   <h3 className="font-medium">{prod.name}</h3>
                   <p className="text-sm text-muted-foreground truncate">

@@ -14,43 +14,28 @@ import {
 // Menu items.
 const items = [
   {
-    title: "Overview",
-    url: "/admin",
-    icon: Settings,
-  },
-  {
-    title: "Products",
-    url: "/admin/products",
+    title: "Address",
+    url: "/account/address",
     icon: Inbox,
   },
   {
-    title: "Create New Products",
-    url: "/admin/products/new",
+    title: "Order",
+    url: "/account/order",
     icon: Calendar,
   },
-  // {
-  //   title: "Edit Products",
-  //   url: "/admin/products/edit",
-  //   icon: Calendar,
-  // },
   {
-    title: "Orders",
-    url: "/admin/orders",
+    title: "Account",
+    url: "/account",
+    icon: Search,
+  },
+  {
+    title: "Settings",
+    url: "/account/#",
     icon: Settings,
   },
-  // {
-  //   title: "Search",
-  //   url: "#",
-  //   icon: Search,
-  // },
-  // {
-  //   title: "Settings",
-  //   url: "#",
-  //   icon: Settings,
-  // },
 ];
 
-const AdminSidebar = () => {
+export function UserSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
@@ -72,20 +57,6 @@ const AdminSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarContent>
-        <SidebarGroup></SidebarGroup>
-      </SidebarContent>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenuItem>
-              <SidebarMenuButton></SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
     </Sidebar>
   );
-};
-
-export default AdminSidebar;
+}

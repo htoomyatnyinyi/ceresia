@@ -24,12 +24,12 @@ const ProductsPage = async () => {
                 className="block rounded-lg border bg-card p-4 hover:shadow-md transition-shadow"
               >
                 <div className="relative w-full h-48 mb-4 overflow-hidden rounded">
-                  {/* <Image
-                    src={product.imageUrl || "/placeholder.png"} // Use product image or fallback
+                  <Image
+                    src={product.imageUrl || "/coffee.png"} // Use product image or fallback
                     alt={product.name}
                     fill
                     className="object-cover"
-                  /> */}
+                  />
                 </div>
                 <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
                 <p className="text-sm text-muted-foreground line-clamp-2 mb-2">

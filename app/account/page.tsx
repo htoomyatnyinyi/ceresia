@@ -7,12 +7,12 @@ const Account = async () => {
 
   return (
     <div>
-      <Link href="/account/address" className="p-2 m-1 border-b-2">
+      {/* <Link href="/account/address" className="p-2 m-1 border-b-2">
         Address
       </Link>
       <Link href="/account/order" className="p-2 m-1 border-b-2">
         Order
-      </Link>
+      </Link> */}
       <SignOutForm userId={session?.userId} />
     </div>
   );

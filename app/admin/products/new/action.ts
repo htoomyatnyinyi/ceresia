@@ -1,39 +1,73 @@
-// app/admin/products/actions.ts
 "use server";
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { v2 as cloudinary } from "cloudinary";
 
 interface ActionState {
   success: boolean;
   message: string;
 }
 
-// --- Placeholder for File Upload (REPLACE ME) ---
-/**
- * WARNING: This is a mock function.
- * For a real application, you must replace this with a function
- * that uploads the file stream to a cloud service (e.g., AWS S3, Cloudinary).
- */
+// // --- Placeholder for File Upload (REPLACE ME) ---
+// /**
+//  * WARNING: This is a mock function.
+//  * For a real application, you must replace this with a function
+//  * that uploads the file stream to a cloud service (e.g., AWS S3, Cloudinary).
+//  */
+// async function uploadImageAndGetUrl(file: File | null): Promise<string | null> {
+//   if (!file || file.size === 0) return null;
+
+//   console.log(
+//     `[MOCK UPLOAD] Processing file: ${file.name}, Type: ${file.type}, Size: ${file.size} bytes`
+//   );
+
+//   // !!! Implement real cloud storage logic here !!!
+//   // The implementation would typically involve:
+//   // 1. Reading the file stream: const buffer = await file.arrayBuffer();
+//   // 2. Sending the buffer/stream to your storage provider (e.g., S3 PutObjectCommand).
+//   // 3. Returning the final public URL.
+
+//   // Mock URL for demonstration:
+//   const mockPublicUrl = `/uploads/${file.name.replace(
+//     /[^a-z0-9.]/gi,
+//     "_"
+//   )}-${Date.now()}`;
+//   return mockPublicUrl;
+// }
+
+// --- Cloudinary Setup ---
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// --- REAL Cloudinary Upload ---
 async function uploadImageAndGetUrl(file: File | null): Promise<string | null> {
   if (!file || file.size === 0) return null;
 
-  console.log(
-    `[MOCK UPLOAD] Processing file: ${file.name}, Type: ${file.type}, Size: ${file.size} bytes`
-  );
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
 
-  // !!! Implement real cloud storage logic here !!!
-  // The implementation would typically involve:
-  // 1. Reading the file stream: const buffer = await file.arrayBuffer();
-  // 2. Sending the buffer/stream to your storage provider (e.g., S3 PutObjectCommand).
-  // 3. Returning the final public URL.
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: "products",
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) {
+          console.error("Cloudinary Upload Error:", error);
+          reject(error);
+        } else {
+          resolve(result?.secure_url || null);
+        }
+      }
+    );
 
-  // Mock URL for demonstration:
-  const mockPublicUrl = `/uploads/${file.name.replace(
-    /[^a-z0-9.]/gi,
-    "_"
-  )}-${Date.now()}`;
-  return mockPublicUrl;
+    uploadStream.end(buffer);
+  });
 }
 
 // --- Form Data Validation and Extraction ---
@@ -126,6 +160,8 @@ export async function createProduct(
     };
   }
 }
+
+// ####
 // // Helper function to extract and validate form data
 // function validateAndExtractData(formData: FormData):
 //   | {

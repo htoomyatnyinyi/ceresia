@@ -1,5 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/theme/app-sidebar";
+// import { AppSidebar } from "@/components/theme/app-sidebar";
+import { UserSidebar } from "./UserSidebar";
 import { cookies } from "next/headers";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
@@ -8,7 +9,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar />
+      <UserSidebar />
       <main>
         <SidebarTrigger />
         {children}

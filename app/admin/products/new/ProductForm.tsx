@@ -1,8 +1,6 @@
-// app/admin/products/ProductForm.tsx
 "use client";
 
 import { useActionState } from "react";
-// import { createProduct } from "./actions"; // Import server action
 import { createProduct } from "./action";
 
 // Define the shape of the result state from the server action
@@ -21,10 +19,8 @@ const ProductForm = () => {
   );
 
   return (
-    <div className="p-6 border rounded-lg shadow-xl  max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">
-        Create New Product
-      </h1>
+    <div className="p-6 border rounded-lg shadow-xl max-w-7xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6 ">Create New Product</h1>
 
       {/* Feedback Message */}
       {state.message && (
@@ -54,6 +50,7 @@ const ProductForm = () => {
             type="text"
             required
             disabled={pending}
+            defaultValue="test upload1"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
           />
         </div>
@@ -74,6 +71,7 @@ const ProductForm = () => {
             min="0.01"
             required
             disabled={pending}
+            defaultValue="10"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
           />
         </div>
@@ -93,6 +91,7 @@ const ProductForm = () => {
             min="0"
             required
             disabled={pending}
+            defaultValue="200"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
           />
         </div>
@@ -128,6 +127,7 @@ const ProductForm = () => {
             name="description"
             rows={4}
             disabled={pending}
+            defaultValue="test upload description 1"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
           />
         </div>
@@ -139,7 +139,7 @@ const ProductForm = () => {
           className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition duration-150 ${
             pending
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              : "bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
           }`}
         >
           {pending ? "Creating Product..." : "Create Product"}

@@ -19,15 +19,19 @@ function Hero() {
     <div className="   ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24  ">
         <div className="grid md:grid-cols-2 gap-12 items-center  ">
-          <div>
+          <div className="space-x-5">
             <h2 className=" mb-4">Summer Collection 2025</h2>
             <p className="text-neutral-300 mb-8 text-lg">
               Discover our latest arrivals and exclusive deals. Quality products
               at unbeatable prices.
             </p>
             <Button size="lg" variant="default">
-              {/* Shop Now */}
               <Link href="/admin">Admin Page</Link>
+            </Button>
+
+            <Button size="lg" variant="default">
+              {/* Shop Now */}
+              <Link href="/products">Let's go Shopping!!</Link>
             </Button>
           </div>
           <div className="relative h-96 rounded-lg overflow-hidden">
