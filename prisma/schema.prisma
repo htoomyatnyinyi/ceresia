@@ -2,19 +2,19 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_URL")
-// }
-
-
 datasource db {
-provider = "mysql"
-// Connection URLs are no longer supported in schema files.
-// Move your DATABASE_URL to prisma.config.ts and provide the connection to PrismaClient
-// via `adapter` (direct DB) or `accelerateUrl` (Accelerate).
-// See: https://pris.ly/d/config-datasource and https://pris.ly/d/prisma7-client-config
+  provider = "mysql"
+  // url      = env("DATABASE_URL")
 }
+
+
+// datasource db {
+// provider = "mysql"
+// // Connection URLs are no longer supported in schema files.
+// // Move your DATABASE_URL to prisma.config.ts and provide the connection to PrismaClient
+// // via `adapter` (direct DB) or `accelerateUrl` (Accelerate).
+// // See: https://pris.ly/d/config-datasource and https://pris.ly/d/prisma7-client-config
+// }
 
 
 // =========================================================

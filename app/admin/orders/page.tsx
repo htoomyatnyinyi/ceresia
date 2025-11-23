@@ -93,7 +93,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
 
       <OrderStatusFilters currentStatus={currentStatus} />
 
-      <div className="mt-8 bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="mt-8  shadow-lg rounded-lg overflow-hidden">
         <OrderTable orders={orders} />
       </div>
 

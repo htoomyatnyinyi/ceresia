@@ -14,6 +14,11 @@ import {
 // Menu items.
 const items = [
   {
+    title: "Overview",
+    url: "/admin",
+    icon: Settings,
+  },
+  {
     title: "Products",
     url: "/admin/products",
     icon: Inbox,
@@ -23,31 +28,26 @@ const items = [
     url: "/admin/products/new",
     icon: Calendar,
   },
-  {
-    title: "Edit Products",
-    url: "/admin/products/edit",
-    icon: Calendar,
-  },
+  // {
+  //   title: "Edit Products",
+  //   url: "/admin/products/edit",
+  //   icon: Calendar,
+  // },
   {
     title: "Orders",
     url: "/admin/orders",
     icon: Settings,
   },
-  {
-    title: "Update Order Status",
-    url: "/admin/orders/update",
-    icon: Settings,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+  // {
+  //   title: "Search",
+  //   url: "#",
+  //   icon: Search,
+  // },
+  // {
+  //   title: "Settings",
+  //   url: "#",
+  //   icon: Settings,
+  // },
 ];
 
 const AdminSidebar = () => {
@@ -69,6 +69,18 @@ const AdminSidebar = () => {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarContent>
+        <SidebarGroup></SidebarGroup>
+      </SidebarContent>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenuItem>
+              <SidebarMenuButton>p</SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
