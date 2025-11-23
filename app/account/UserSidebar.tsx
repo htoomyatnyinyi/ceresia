@@ -14,6 +14,11 @@ import {
 // Menu items.
 const items = [
   {
+    title: "Home",
+    url: "/",
+    icon: Home,
+  },
+  {
     title: "Address",
     url: "/account/address",
     icon: Inbox,
