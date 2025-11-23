@@ -32,7 +32,7 @@ const Links = ({
   userId: string | undefined;
 }) => {
   const pathname = usePathname();
-  console.log(role, userId);
+  // console.log(role, userId);
 
   // 1. Start with common links
   let linksToShow = [...COMMON_LINKS];

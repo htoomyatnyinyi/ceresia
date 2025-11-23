@@ -32,7 +32,7 @@ const Nav = async () => {
             {/* Pass props */}
           </div>
           <div className="xl:hidden">
-            {/* <MobileNav role={safeRole} userId={session?.userId} />{" "} */}
+            <MobileNav role={safeRole} userId={session?.userId} />{" "}
             {/* Pass props */}
           </div>
         </div>
