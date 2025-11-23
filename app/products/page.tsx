@@ -25,7 +25,8 @@ const ProductsPage = async () => {
               >
                 <div className="relative w-full h-48 mb-4 overflow-hidden rounded">
                   <Image
-                    src={product.imageUrl || "/coffee.png"} // Use product image or fallback
+                    src={product.imageUrl!} // Use product image or fallback
+                    // src={product.imageUrl || "/coffee.png"} // Use product image or fallback
                     alt={product.name}
                     fill
                     className="object-cover"

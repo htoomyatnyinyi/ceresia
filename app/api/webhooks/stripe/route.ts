@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
+// temp remove this one may be important. hmnn
 // // Disable body parsing
 // export const config = {
 //   api: {

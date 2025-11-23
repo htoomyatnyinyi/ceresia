@@ -38,7 +38,8 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-lg">
             <Image
-              src={product.imageUrl || "/coffee.png"} // Use product image or fallback
+              src={product.imageUrl!} // Use product image or fallback
+              // src={product.imageUrl || "/coffee.png"} // Use product image or fallback
               alt={product.name}
               fill
               className="object-cover "
@@ -72,7 +73,8 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
                 >
                   <div className="relative w-full h-40 mb-2 overflow-hidden rounded">
                     <Image
-                      src={prod.imageUrl || "/coffee.png"}
+                      src={prod.imageUrl!}
+                      // src={prod.imageUrl || "/coffee.png"}
                       alt={prod.name}
                       fill
                       className="object-cover"
