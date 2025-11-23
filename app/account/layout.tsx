@@ -1,5 +1,4 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-// import { AppSidebar } from "@/components/theme/app-sidebar";
 import { UserSidebar } from "./UserSidebar";
 import { cookies } from "next/headers";
 
