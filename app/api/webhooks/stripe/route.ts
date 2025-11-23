@@ -6,12 +6,12 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-// Disable body parsing
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// // Disable body parsing
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 async function getRawBody(request: Request) {
   const chunks = [];
