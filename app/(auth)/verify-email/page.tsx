@@ -1,3 +1,8 @@
+const page = () => {
+  return <div>Comming Soon for verify-email.</div>;
+};
+
+export default page;
 // "use client";
 
 // import { useFormState, useFormStatus } from "react-dom";

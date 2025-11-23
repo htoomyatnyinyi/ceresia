@@ -108,7 +108,7 @@ export async function resetPassword(_: any, formData: FormData) {
     const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.update({
       where: { id: resetToken.userId },
-      data: { hashedPassword },
+      data: { password: hashedPassword },
     });
 
     // 4. Delete used token

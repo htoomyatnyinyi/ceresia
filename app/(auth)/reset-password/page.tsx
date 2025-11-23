@@ -2,7 +2,7 @@
 
 import { useFormState, useFormStatus } from "react-dom";
 import { requestPasswordReset } from "./action";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -55,17 +55,17 @@ export default function PasswordResetRequestPage() {
                 borderRadius: "4px",
               }}
             />
-            {state.errors?.email && (
+            {/* {state.errors?.email && (
               <p style={{ color: "red", marginTop: "0.25rem" }}>
                 {state.errors.email}
               </p>
-            )}
+            )} */}
           </div>
-          {state.errors?.general && (
+          {/* {state.errors?.general && (
             <p style={{ color: "red", marginTop: "0.5rem" }}>
               {state.errors.general}
             </p>
-          )}
+          )} */}
           <SubmitButton />
         </form>
       )}
