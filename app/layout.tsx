@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 // @ts-ignore - no type declarations for CSS side-effect import
 import "./globals.css";
 
+import { Analytics } from "@vercel/analytics/next";
+
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import Nav from "@/components/navbar/Nav";
@@ -29,6 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <Analytics />
       <body
       // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
