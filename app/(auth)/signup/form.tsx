@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { signup } from "./actions";
+// import { signup } from "./actions";
+import { signup } from "@/server-actions/auth";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 

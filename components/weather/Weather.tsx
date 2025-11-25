@@ -42,7 +42,7 @@ export default function Weather() {
     // <main className="flex min-h-screen flex-col items-center p-24">
     <main className="flex flex-col items-center p-24">
       <div className="w-full max-w-md p-8  rounded-xl shadow-lg">
-        <h1 className="text-3xl font-bold mb-6">🌦️ MCP Weather Tool</h1>
+        <h1 className="text-3xl font-bold mb-6">🌦️ Weather</h1>
 
         <form onSubmit={handleGetWeather}>
           <label
@@ -51,7 +51,7 @@ export default function Weather() {
           >
             City Name
           </label>
-          <div className="mt-1 flex rounded-md shadow-sm">
+          <div className="mt-1 flex  rounded-md shadow-sm">
             <input
               type="text"
               id="city"
