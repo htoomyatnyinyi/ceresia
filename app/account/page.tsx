@@ -2,11 +2,20 @@ import { verifySession } from "@/lib/session";
 import Link from "next/link";
 import SignOutForm from "../(auth)/signout/form";
 import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 const Account = async () => {
   const session = await verifySession();
-  if (session.success) {
-    return { message: "Session is failed" };
+  // if (session.success) {
+  //   return { message: "Session is failed" };
+  // }
+
+  if (!session) {
+    // ✅ Solution A: Redirect the user to the login page
+    redirect("/login");
+
+    // ✅ Solution B: Render an error UI element instead
+    // return <div>You must be logged in to view this page.</div>;
   }
 
   const data = await prisma.order.findMany({
@@ -16,6 +25,7 @@ const Account = async () => {
 
   return (
     <div>
+      <h1>Welcome, {session.userId}</h1>
       {/* <Link href="/account/address" className="p-2 m-1 border-b-2">
         Address
       </Link>
