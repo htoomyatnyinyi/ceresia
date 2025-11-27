@@ -30,7 +30,7 @@ const items = [
   },
   {
     title: "Account",
-    url: "/account",
+    url: "/account/user",
     icon: Search,
   },
   {

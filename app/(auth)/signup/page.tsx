@@ -29,7 +29,7 @@ export default function page() {
       toast.success(state.message, {
         description: state.description,
       });
-      redirect("/products"); // Assuming redirect to /products after successful signup, similar to signin
+      redirect("/verify-email"); // Assuming redirect to /products after successful signup, similar to signin
     }
 
     // Handle errors and display toast notifications

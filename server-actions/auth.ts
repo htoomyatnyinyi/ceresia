@@ -4,8 +4,10 @@ import prisma from "@/lib/prisma";
 
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { createSession } from "@/lib/session";
+import { createSession, deleteSession } from "@/lib/session";
+import { sendVerificationEmail } from "@/lib/email";
 
+// signin function
 const SignInFormSchema = z.object({
   email: z.email("Invalid email address"),
   password: z.string().min(1, "Password must be at least 6 characters"),
@@ -61,8 +63,7 @@ export const signin = async (state: any, formData: any) => {
   }
 };
 
-// ###########
-import { sendVerificationEmail } from "@/lib/email";
+// signup function
 
 const SignUpFormSchema = z
   .object({
@@ -175,5 +176,30 @@ export const signup = async (state: any, formData: any) => {
     return {
       errors: { general: "Something went wrong. Please try again." },
     };
+  }
+};
+
+// signout function
+
+const SignOutSchema = z.object({
+  userId: z.string(),
+});
+
+export const signout = async (state: any, formData: FormData) => {
+  // should we use verifySession here of as props i do not know.
+  console.log(state, "state");
+  // //   console.log(formData, "formData");
+  // const validatedData = SignOutSchema.parse({
+  //   userId: formData.get("userId"),
+  // });
+
+  // console.log(validatedData, "validated");
+  try {
+    await deleteSession();
+
+    return { success: true, message: "Signout Successfully!!" };
+  } catch (error) {
+    console.error("Error signout", error);
+    return { success: false, message: "Failed to Signout" };
   }
 };

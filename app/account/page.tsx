@@ -1,9 +1,18 @@
 import { verifySession } from "@/lib/session";
 import Link from "next/link";
 import SignOutForm from "../(auth)/signout/form";
+import prisma from "@/lib/prisma";
 
 const Account = async () => {
   const session = await verifySession();
+  if (session.success) {
+    return { message: "Session is failed" };
+  }
+
+  const data = await prisma.order.findMany({
+    where: { userId: session?.userId },
+  });
+  console.log(data, "data");
 
   return (
     <div>
@@ -13,7 +22,7 @@ const Account = async () => {
       <Link href="/account/order" className="p-2 m-1 border-b-2">
         Order
       </Link> */}
-      <SignOutForm userId={session?.userId} />
+      {/* <SignOutForm userId={session?.userId} /> */}
     </div>
   );
 };

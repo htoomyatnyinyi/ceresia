@@ -87,8 +87,8 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        📦 Order Management ({totalOrders})
+      <h1 className="text-3xl font-bold mb-6 ">
+        Order Management ({totalOrders})
       </h1>
 
       <OrderStatusFilters currentStatus={currentStatus} />
@@ -176,50 +176,53 @@ const OrderTable = ({
 }: {
   orders: Awaited<ReturnType<typeof getOrders>>["orders"];
 }) => (
-  <table className="min-w-full divide-y divide-gray-200">
-    <thead className="bg-gray-50">
+  <table className="min-w-full divide-y divide-slate-900">
+    <thead className="border">
       <tr>
-        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
           Order ID
         </th>
-        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
           Customer
         </th>
-        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
           Total Amount
         </th>
-        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
           Status
         </th>
-        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
           Date
         </th>
         <th className="px-6 py-3"></th>
       </tr>
     </thead>
-    <tbody className="bg-white divide-y divide-gray-200">
+    <tbody className=" divide-y divide-white/20">
       {orders.length > 0 ? (
         orders.map((order) => (
-          <tr key={order.id} className="hover:bg-gray-50">
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+          <tr
+            key={order.id}
+            className="dark:hover:bg-slate-900 hover:bg-slate-200"
+          >
+            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium ">
               #{order.id.substring(0, 8)}...
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+            <td className="px-6 py-4 whitespace-nowrap text-sm ">
               {order.user.username || order.user.email}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold ">
               {formatCurrency(order.totalAmount)}
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
               <OrderStatusBadge status={order.status} />
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td className="px-6 py-4 whitespace-nowrap text-sm ">
               {new Date(order.createdAt).toLocaleDateString()}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
               <Link
                 href={`/admin/orders/${order.id}`}
-                className="text-indigo-600 hover:text-indigo-900 transition duration-150"
+                className="text-sky-600 hover:text-black dark:hover:text-white transition duration-150"
               >
                 View
               </Link>
@@ -228,7 +231,7 @@ const OrderTable = ({
         ))
       ) : (
         <tr>
-          <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+          <td colSpan={6} className="px-6 py-12 text-center ">
             No orders found for this status.
           </td>
         </tr>

@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 // Assuming updateStatus is imported from a separate server action file
 // import { updateStatus } from "./actions";
 import { updateStatus } from "./action";
 import { OrderStatus } from "@prisma/client"; // Use the enum type for better safety
+import { toast } from "sonner";
 
 // Define the shape of the result state from the server action
 interface ActionState {
@@ -25,29 +26,32 @@ const StatusForm = ({
     null
   );
 
+  useEffect(() => {
+    if (state?.success) {
+      toast.message(state.message);
+    }
+  });
+
   return (
     <div className="p-4 border rounded-lg shadow-sm  max-w-sm">
       <h3 className="text-lg font-semibold mb-3">Update Order Status</h3>
 
-      {/* Display Feedback */}
-      {state && (
-        <p
-          className={`p-2 mb-3 rounded text-sm font-medium ${
-            state.success
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {state.message}
-        </p>
-      )}
+      {/* Display Feedback change to toast
+      // {state && (
+      //   <p
+      //     className={`p-2 mb-3 rounded text-sm font-medium ${
+      //       state.success
+      //         ? "bg-green-100 text-green-700"
+      //         : "bg-red-100 text-red-700"
+      //     }`}
+      //   >
+      //     {state.message}
+      //   </p>
+      // )} */}
 
       <form action={action} className="space-y-4">
         <div className="flex flex-col">
-          <label
-            htmlFor="status"
-            className="mb-1 text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="status" className="mb-1 text-sm font-medium">
             Current Status: **{currentStatus}**
           </label>
 
@@ -80,7 +84,7 @@ const StatusForm = ({
           className={`w-full py-2 px-4 rounded-md font-semibold text-white transition duration-150 ${
             pending
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700 shadow-md"
+              : "dark:bg-white dark:text-black dark:hover:bg-slate-200 hover:bg-slate-900 bg-black text-white shadow-md"
           }`}
         >
           {pending ? "Updating..." : "Update Status"}

@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-import { signout } from "./actions";
+// import { signout } from "./actions";
+import { signout } from "@/server-actions/auth";
 import { toast } from "sonner";
 
 const SignOutForm = ({ userId }: { userId: string | undefined }) => {

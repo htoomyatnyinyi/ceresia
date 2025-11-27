@@ -28,7 +28,7 @@ export default async function ProductsPage() {
       {/* Link to create new product (using a dummy ID for now, will link to a form) */}
       <a
         href="/admin/products/new"
-        className="inline-block bg-blue-500  px-4 py-2 rounded mb-4 hover:bg-blue-600"
+        className="inline-block dark:bg-white dark:text-black bg-black text-white   px-4 py-2 rounded mb-4 dark:hover:bg-slate-600"
       >
         + Add New Product
       </a>

@@ -1,27 +1,27 @@
-"use server";
+// "use server";
 
-import { deleteSession } from "@/lib/session";
-import z from "zod";
+// import { deleteSession } from "@/lib/session";
+// import z from "zod";
 
-const SignOutSchema = z.object({
-  userId: z.string(),
-});
+// const SignOutSchema = z.object({
+//   userId: z.string(),
+// });
 
-export const signout = async (state: any, formData: FormData) => {
-  // should we use verifySession here of as props i do not know.
-  console.log(state, "state");
-  // //   console.log(formData, "formData");
-  // const validatedData = SignOutSchema.parse({
-  //   userId: formData.get("userId"),
-  // });
+// export const signout = async (state: any, formData: FormData) => {
+//   // should we use verifySession here of as props i do not know.
+//   console.log(state, "state");
+//   // //   console.log(formData, "formData");
+//   // const validatedData = SignOutSchema.parse({
+//   //   userId: formData.get("userId"),
+//   // });
 
-  // console.log(validatedData, "validated");
-  try {
-    await deleteSession();
+//   // console.log(validatedData, "validated");
+//   try {
+//     await deleteSession();
 
-    return { success: true, message: "Signout Successfully!!" };
-  } catch (error) {
-    console.error("Error signout", error);
-    return { success: false, message: "Failed to Signout" };
-  }
-};
+//     return { success: true, message: "Signout Successfully!!" };
+//   } catch (error) {
+//     console.error("Error signout", error);
+//     return { success: false, message: "Failed to Signout" };
+//   }
+// };

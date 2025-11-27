@@ -1,10 +1,9 @@
-// src/components/Nav/Links.jsx or similar path
 "use client";
 
+import SignOutForm from "@/app/(auth)/signout/form"; // Make sure this path is correct
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "../theme/ModeToggle";
-import SignOutForm from "@/app/(auth)/signout/form"; // Make sure this path is correct
 
 // Define link sets
 const COMMON_LINKS = [
