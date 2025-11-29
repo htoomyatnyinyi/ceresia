@@ -27,7 +27,6 @@ export const signin = async (state: any, formData: any) => {
   }
 
   const { email, password } = validateResult.data;
-
   // 2. Check if user exists
   const user = await prisma.user.findUnique({
     where: { email },
@@ -95,12 +94,13 @@ export const signup = async (state: any, formData: any) => {
 
   if (!validateResult.success) {
     return {
-      errors: validateResult.error.flatten().fieldErrors,
+      errors: validateResult.error.flatten,
       // errors: validateResult.error.flatten().fieldErrors,
     };
   }
 
   const { username, email, password } = validateResult.data;
+  console.log(email, username, password);
 
   // 2. Check for existing user by email or name
   const existingUserByEmail = await prisma.user.findUnique({

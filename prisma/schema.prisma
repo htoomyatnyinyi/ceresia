@@ -1,370 +1,178 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated/prisma"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
-
-
-// datasource db {
-// provider = "mysql"
-// // Connection URLs are no longer supported in schema files.
-// // Move your DATABASE_URL to prisma.config.ts and provide the connection to PrismaClient
-// // via `adapter` (direct DB) or `accelerateUrl` (Accelerate).
-// // See: https://pris.ly/d/config-datasource and https://pris.ly/d/prisma7-client-config
-// }
-
-
-// =========================================================
-// 1. User & Authentication
-// =========================================================
 
 model User {
-id          String      @id @default(cuid())
-username    String      @unique
-email       String      @unique
-googleId    String?     @unique // for google 0auth
-password    String?
+  id                      String                   @id @default(cuid())
+  username                String                   @unique
+  email                   String                   @unique
+  googleId                String?                  @unique
+  password                String?
+  role                    Role                     @default(USER)
+  firstName               String?
+  lastName                String?
+  phoneNumber             String?
+  birthdate               DateTime?
+  bio                     String?
+  avatarUrl               String?
+  verified                Boolean                  @default(false)
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  cart                    Cart?
+  emailVerificationTokens EmailVerificationToken[]
+  passwordResetTokens     PasswordResetToken[]
+  orders                  Order[]
 
-role        Role        @default(USER)
+  // relation
+  addresses               Address[]
+  reviews                 Review[]
 
-firstName   String?
-lastName    String?
-phoneNumber String?
-birthdate   DateTime?
-bio         String?
 
-avatarUrl   String?
-verified    Boolean     @default(false)
-
-createdAt   DateTime    @default(now())
-updatedAt   DateTime    @updatedAt
-
-// Add password hash for full auth or links for providers (e.g., NextAuth)
-
-// Relationships
-cart    Cart?     // One-to-one relationship with the user's current shopping cart
-orders  Order[]   // One-to-many relationship with all placed orders
-
-// addon shipping addresses
-// pending for a while
-// shippingAddresses shippingAddress[]
-
-// add on 
-emailVerificationTokens EmailVerificationToken[] // Add relation for email verify
-passwordResetTokens PasswordResetToken[] // Add relation for password reset
-
-@@map("users")
+  // @@map("users")
 }
-enum Role {
-  USER
-  EDITOR
-  ADMIN
+
+model Address {
+  id             String   @id @default(uuid())
+  street         String
+  city           String
+  state          String?
+  country        String
+  postalCode     String
+  isDefault      Boolean  @default(false)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+
+  ordersShipping Order[]  
+}
+
+
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int      
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relationship
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model PasswordResetToken {
   id        String   @id @default(uuid())
   token     String   @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model EmailVerificationToken {
   id        String   @id @default(uuid())
   token     String   @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-
-// =========================================================
-// 2. Product Catalog
-// =========================================================
 
 model Product {
-id          String    @id @default(cuid())
-name        String
-description String?
-price       Decimal   @db.Decimal(10, 2) // Use Decimal for precise currency representation
-stock       Int
-imageUrl    String?
-
-createdAt   DateTime    @default(now())
-updatedAt   DateTime    @updatedAt
-
-// Relationships
-cartItems   CartItem[]
-orderItems  OrderItem[]
-
-
-
-// @@map("products")
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  price       Decimal     @db.Decimal(10, 2)
+  stock       Int
+  imageUrl    String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  // relation
+  review      Review[]
 }
 
-// =========================================================
-// 3. Shopping Cart (Pre-Checkout)
-// =========================================================
-
 model Cart {
-id        String     @id @default(cuid())
-
-createdAt DateTime   @default(now())
-updatedAt DateTime   @updatedAt
-
-// Relationships
-userId    String     @unique
-user      User       @relation(fields: [userId], references: [id])
-
-items     CartItem[] // Items currently in the cart
-
-
-// @@map("carts")
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
 }
 
 model CartItem {
-id          String   @id @default(cuid())
-quantity    Int
-
-createdAt   DateTime    @default(now())
-updatedAt   DateTime    @updatedAt
-
-
-// Relationships
-cartId      String
-cart        Cart     @relation(fields: [cartId], references: [id])
-productId   String
-product     Product  @relation(fields: [productId], references: [id])
-
-// @@unique([cartId, productId]) // A user can only have one instance of a product in their cart
-// @@map("cart_items")
+  id        String   @id @default(cuid())
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cartId    String
+  productId String
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }
-
-// =========================================================
-// 4. Order & Checkout (Post-Checkout)
-// =========================================================
-
 
 model Order {
-id             String        @id @default(cuid())
-userId         String
-status         OrderStatus   @default(PENDING)
-totalAmount    Decimal       @db.Decimal(10, 2)
-shippingAddress Json?         // Store address details as a flexible JSON object
+  id              String      @id @default(cuid())
+  userId          String
+  status          OrderStatus @default(PENDING)
+  totalAmount     Decimal     @db.Decimal(10, 2)
+  shippingAddress Json?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+  user            User        @relation(fields: [userId], references: [id])
+  
+  // relationship
+  addressId       String
+  address         Address?    @relation(fields: [addressId], references: [id])
 
-createdAt      DateTime      @default(now())
-updatedAt      DateTime      @updatedAt
-
-// Relationships
-user           User          @relation(fields: [userId], references: [id])
-items          OrderItem[]   // Snapshot of products at time of purchase
-
-// // addOn shipping address relation
-// shippingAddressId String @unique
-// shipping   shippingAddress @relation(fields: [shippingAddressId], references: [id])
-
-@@map("orders")
+  // @@map("orders")
 }
 
-
-// model shippingAddress {
-//   id          String @id @default(cuid())
-//   street      String
-//   state       String
-//   city        String
-//   country     String
-//   postalCode  String
-//   isDefault   Boolean @default(false)
-
-//   createdAt   DateTime      @default(now())
-//   updatedAt   DateTime      @updatedAt
-
-//   // relationship
-//   userId      String
-//   user  User  @relation(fields: [userId], references: [id])
-
-//   // orders shipped to this address
-//   order Order[]
-  
-// }
-
 model OrderItem {
-id          String    @id @default(cuid())
-productName String    // Snapshot of the name at the time of purchase
-price       Decimal   @db.Decimal(10, 2) // The price at the time the order was placed (crucial for history)
-quantity    Int
+  id          String   @id @default(cuid())
+  productName String
+  price       Decimal  @db.Decimal(10, 2)
+  quantity    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orderId     String
+  productId   String?
+  order       Order    @relation(fields: [orderId], references: [id])
+  product     Product? @relation(fields: [productId], references: [id])
 
-createdAt   DateTime    @default(now())
-updatedAt   DateTime    @updatedAt
+  // @@map("order_items")
+}
 
+model ProcessedWebhookEvent {
+  id        String   @id
+  createdAt DateTime @default(now())
 
-// Relationships
-orderId     String
-order       Order     @relation(fields: [orderId], references: [id])
-// Optional link back to Product, but productName and price are mandatory for historical record
-productId   String?   // Optional if product is deleted, but good for linking
-product     Product?  @relation(fields: [productId], references: [id])
+  // @@map("processed_webhook_events")
+}
 
-
-@@map("order_items")
+enum Role {
+  USER
+  EDITOR
+  ADMIN
 }
 
 enum OrderStatus {
-  PENDING   // Order created, waiting for payment confirmation
-  PAID      // Payment successful, processing
-  SHIPPED   // Order has been shipped
-  DELIVERED // Order has reached the customer
-  CANCELLED // Order was cancelled
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }
-
-
-
-// Add this to your Prisma schema file (schema.prisma)
-// Then run: npx prisma migrate dev --name add_webhook_events
-
-model ProcessedWebhookEvent {
-  id        String   @id // Stripe event ID
-  createdAt DateTime @default(now())
-
-  @@map("processed_webhook_events")
-}
-
-// **** BACKUP ****
-// generator client {
-// provider = "prisma-client-js"
-// }
-
-// datasource db {
-// provider = "mysql"
-// url      = env("DATABASE_URL")
-// }
-
-// // =========================================================
-// // 1. User & Authentication
-// // =========================================================
-
-// model User {
-// id        String @id @default(cuid())
-// email     String @unique
-// name      String?
-// password  String
-// googleId  String? @unique // for google 0auth
-// // Add password hash for full auth or links for providers (e.g., NextAuth)
-
-// // Relationships
-// cart    Cart?     // One-to-one relationship with the user's current shopping cart
-// orders  Order[]   // One-to-many relationship with all placed orders
-
-// @@map("users")
-// }
-
-// // =========================================================
-// // 2. Product Catalog
-// // =========================================================
-
-// model Product {
-// id          String    @id @default(cuid())
-// name        String
-// description String?
-// price       Decimal   @db.Decimal(10, 2) // Use Decimal for precise currency representation
-// stock       Int
-// imageUrl    String?
-
-// // Relationships
-// cartItems   CartItem[]
-// orderItems  OrderItem[]
-
-// // @@map("products")
-// }
-
-// // =========================================================
-// // 3. Shopping Cart (Pre-Checkout)
-// // =========================================================
-
-// model Cart {
-// id        String     @id @default(cuid())
-// createdAt DateTime   @default(now())
-// updatedAt DateTime   @updatedAt
-
-// // Relationships
-// userId    String     @unique
-// user      User       @relation(fields: [userId], references: [id])
-
-// items     CartItem[] // Items currently in the cart
-
-// // @@map("carts")
-// }
-
-// model CartItem {
-// id          String   @id @default(cuid())
-// quantity    Int
-
-// // Relationships
-// cartId      String
-// cart        Cart     @relation(fields: [cartId], references: [id])
-// productId   String
-// product     Product  @relation(fields: [productId], references: [id])
-
-// // @@unique([cartId, productId]) // A user can only have one instance of a product in their cart
-// // @@map("cart_items")
-// }
-
-// // =========================================================
-// // 4. Order & Checkout (Post-Checkout)
-// // =========================================================
-
-// enum OrderStatus {
-// PENDING   // Order created, waiting for payment confirmation
-// PAID      // Payment successful, processing
-// SHIPPED   // Order has been shipped
-// DELIVERED // Order has reached the customer
-// CANCELLED // Order was cancelled
-// }
-
-// model Order {
-// id             String        @id @default(cuid())
-// userId         String
-// status         OrderStatus   @default(PENDING)
-// totalAmount    Decimal       @db.Decimal(10, 2)
-// shippingAddress Json?         // Store address details as a flexible JSON object
-
-// createdAt      DateTime      @default(now())
-// updatedAt      DateTime      @updatedAt
-
-// // Relationships
-// user           User          @relation(fields: [userId], references: [id])
-// items          OrderItem[]   // Snapshot of products at time of purchase
-
-// @@map("orders")
-// }
-
-// model OrderItem {
-// id          String    @id @default(cuid())
-// orderId     String
-// productId   String?   // Optional if product is deleted, but good for linking
-// productName String    // Snapshot of the name at the time of purchase
-// price       Decimal   @db.Decimal(10, 2) // The price at the time the order was placed (crucial for history)
-// quantity    Int
-
-// // Relationships
-// order       Order     @relation(fields: [orderId], references: [id])
-// // Optional link back to Product, but productName and price are mandatory for historical record
-// product     Product?  @relation(fields: [productId], references: [id])
-
-// @@map("order_items")
-// }
-
-// // Add this to your Prisma schema file (schema.prisma)
-// // Then run: npx prisma migrate dev --name add_webhook_events
-
-// model ProcessedWebhookEvent {
-//   id        String   @id // Stripe event ID
-//   createdAt DateTime @default(now())
-
-//   @@map("processed_webhook_events")
-// }
-
