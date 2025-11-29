@@ -4,10 +4,11 @@ import AdminSidebar from "./AdminSidebar";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+  // const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
+    <SidebarProvider>
+      {/* <SidebarProvider defaultOpen={defaultOpen}> */}
       <AdminSidebar />
 
       <main>
