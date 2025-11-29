@@ -1,10 +1,23 @@
 // import { verifySession } from "@/lib/session";
 import prisma from "@/lib/prisma";
+import { verifySession } from "@/lib/session";
 import { Decimal } from "@prisma/client/runtime/library";
+import { redirect } from "next/navigation";
 
 // --- 1. Data Fetching and Shaping ---
 
 const getDashboardData = async () => {
+  const session = await verifySession();
+  console.log(session, "se admin");
+  if (session.role === "USER") {
+    // ✅ Solution A: Redirect the user to the login page
+    redirect("/signin");
+    // console.log("not");
+
+    // ✅ Solution B: Render an error UI element instead
+    // return <div>You must be logged in as an admin to view this page.</div>;
+  }
+
   // Use Promise.all to fetch all data concurrently
   const [
     user_count,

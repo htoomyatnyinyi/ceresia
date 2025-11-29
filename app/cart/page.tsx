@@ -8,9 +8,11 @@ import { revalidatePath } from "next/cache";
 
 const CartPage = async () => {
   const session = await verifySession();
+  console.log(session, "session at cart");
 
-  if (!session?.userId) {
-    redirect("/login"); // Redirect to login if not authenticated; adjust path as needed
+  if (!session.success) {
+    // await deleteSession(); // not working need to import
+    redirect("/signin"); // Redirect to login if not authenticated; adjust path as needed
   }
 
   const cartItems = await prisma.cartItem.findMany({

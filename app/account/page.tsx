@@ -6,13 +6,10 @@ import { redirect } from "next/navigation";
 
 const Account = async () => {
   const session = await verifySession();
-  // if (session.success) {
-  //   return { message: "Session is failed" };
-  // }
 
-  if (!session) {
+  if (!session.success) {
     // ✅ Solution A: Redirect the user to the login page
-    redirect("/login");
+    redirect("/signin");
 
     // ✅ Solution B: Render an error UI element instead
     // return <div>You must be logged in to view this page.</div>;
@@ -32,7 +29,7 @@ const Account = async () => {
       <Link href="/account/order" className="p-2 m-1 border-b-2">
         Order
       </Link> */}
-      {/* <SignOutForm userId={session?.userId} /> */}
+      <SignOutForm userId={session?.userId} />
     </div>
   );
 };

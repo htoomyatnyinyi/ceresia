@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
+import { redirect } from "next/navigation";
 import z from "zod";
 
 const addtocartSchema = z.object({
@@ -13,7 +14,10 @@ const addtocartSchema = z.object({
 // The Server Action
 export const addtocart = async (state: any, formData: FormData) => {
   const session = await verifySession();
-  // const userId = "clxi8v09c000008l414y5e36k";
+
+  if (!session.success) {
+    redirect("/signin");
+  }
 
   // 1. Prepare data for Zod parsing
   const rawData = {

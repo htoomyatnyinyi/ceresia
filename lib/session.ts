@@ -70,42 +70,89 @@ export async function createSession(userId: string) {
 }
 
 // original code
+// export const verifySession = async () => {
+//   const cookieStore = await cookies();
+//   const session = cookieStore.get("session")?.value;
+//   // console.log(cookieStore, " at verify session", session, "data");
+
+//   if (!session) {
+//     cookieStore.delete("session");
+//     return { success: false, message: "No session found" };
+//   }
+//   // console.log(session, "session token");
+
+//   const dsession = await decrypt(session);
+//   // console.log(dsession);
+
+//   const user = await prisma.user.findUnique({
+//     where: { id: dsession.userId },
+//     // select: { id: true }, // ecommerce code
+//     // select: { id: true, verified: true }, // original code
+//     select: { id: true, verified: true, role: true }, // update code
+//   });
+
+//   if (!user) {
+//     // redirect("/signin");
+//     return { success: false, message: "User not found" };
+//   }
+
+//   // // Uncomment This to prevent looping verifyemail
+//   // if (!user.verified) {
+//   //   redirect("/verifyemail");
+//   // }
+
+//   // console.log(user, "d");
+
+//   // id to userId changed
+//   // return { userId: user.id }; // original code
+//   // return { userId: user.id, role: user.role }; // updaet code
+//   return { success: true, userId: user.id, role: user.role }; // updaet code
+// };
 export const verifySession = async () => {
   const cookieStore = await cookies();
   const session = cookieStore.get("session")?.value;
-  // console.log(cookieStore, " at verify session", session, "data");
 
+  // 1. No session cookie
   if (!session) {
+    // cookieStore.delete("session");
     return { success: false, message: "No session found" };
   }
-  // console.log(session, "session token");
 
-  const dsession = await decrypt(session);
-  // console.log(dsession);
+  // 2. Try to decrypt
+  let dsession = null;
 
+  try {
+    dsession = await decrypt(session);
+  } catch (err) {
+    // Decryption failed = invalid or tampered token
+    // cookieStore.delete("session");
+    return { success: false, message: "Invalid session token" };
+  }
+
+  // 3. dsession missing or malformed
+  if (!dsession || !dsession.userId) {
+    // cookieStore.delete("session");
+    return { success: false, message: "Invalid session data" };
+  }
+
+  // 4. Look up user
   const user = await prisma.user.findUnique({
     where: { id: dsession.userId },
-    // select: { id: true }, // ecommerce code
-    // select: { id: true, verified: true }, // original code
-    select: { id: true, verified: true, role: true }, // update code
+    select: { id: true, verified: true, role: true },
   });
 
+  // 5. Missing user
   if (!user) {
-    // redirect("/signin");
+    // cookieStore.delete("session");
     return { success: false, message: "User not found" };
   }
 
-  // // Uncomment This to prevent looping verifyemail
-  // if (!user.verified) {
-  //   redirect("/verifyemail");
-  // }
-
-  // console.log(user, "d");
-
-  // id to userId changed
-  // return { userId: user.id }; // original code
-  // return { userId: user.id, role: user.role }; // updaet code
-  return { success: true, userId: user.id, role: user.role }; // updaet code
+  // 6. Success
+  return {
+    success: true,
+    userId: user.id,
+    role: user.role,
+  };
 };
 
 /*
@@ -128,7 +175,7 @@ export const verifySession = async () => {
       "Session decryption failed or userId missing. Token might be expired or invalid."
     );
     // Optionally clear the invalid cookie:
-    // cookieStore.delete("session");
+    cookieStore.delete("session");
     return { success: false, message: "Invalid or expired session token" };
   }
 
@@ -142,7 +189,7 @@ export const verifySession = async () => {
   if (!user) {
     // Case 3: User ID was in the token, but no user exists in the database.
     // Clean up the stale session
-    cookieStore.delete("session");
+    // cookieStore.delete("session");
     return { success: false, message: "User not found" };
   }
 
@@ -155,5 +202,6 @@ export const verifySession = async () => {
 export async function deleteSession() {
   const cookieStore = await cookies();
   cookieStore.delete("session");
+  console.log("delete session is activated");
   // redirect("/signin"); // i check this route is not working
 }

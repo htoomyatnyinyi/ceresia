@@ -19,7 +19,7 @@ const SIGN_IN_OUT_LINKS = [
 
 const LOGGED_IN_LINKS = [
   { name: "account", path: "/account" },
-  { name: "order", path: "/account/order" },
+  // { name: "order", path: "/account/order" },
 ];
 
 // Define the component with a clear type for the role prop

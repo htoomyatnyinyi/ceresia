@@ -29,7 +29,7 @@ type FormState = {
 
 // export default function AddToCart({ productData }: any) {
 export default function AddToCart({ productId, price }: AddToCartProps) {
-  console.log(productId, price);
+  // console.log(productId, price);
   const [quantity, setQuantity] = useState(1);
   const [open, setOpen] = useState(false);
   const [cartItems, setCartItems] = useState<any[]>([]);
